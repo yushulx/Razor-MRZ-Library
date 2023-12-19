@@ -1,0 +1,193 @@
+﻿@page "/"
+@inject IJSRuntime JSRuntime
+@using RazorCameraLibrary
+@using RazorMrzLibrary
+@using Camera = RazorCameraLibrary.Camera
+
+<PageTitle>Index</PageTitle>
+
+<div id="loading-indicator" class="loading-indicator" style="@(isLoading ? "display: flex;" : "display: none;")">
+    <div class="spinner"></div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <label>Get a License key from <a href="https://www.dynamsoft.com/customer/license/trialLicense?product=dlr"
+                target="_blank">here</a> </label>
+        <div class="filler"></div>
+        <input type="text" placeholder="@licenseKey" @bind="licenseKey">
+        <button @onclick="Activate">Activate SDK</button>
+    </div>
+
+    <div>
+        <button @onclick="GetCameras">Get Cameras</button>
+        <select id="sources" @onchange="e => OnChange(e)">
+            @foreach (var camera in cameras)
+            {
+                <option value="@camera.DeviceId">@camera.Label</option>
+            }
+        </select>
+        <button @onclick="Capture">@buttonText</button>
+    </div>
+
+    <div id="videoview">
+        <div id="videoContainer"></div>
+    </div>
+    
+</div>
+
+<div class="mrz-result">@result</div>
+
+@code {
+    private string licenseKey =
+    "DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ==";
+    private MarkupString result = new MarkupString("");
+    private bool isLoading = false;
+    private List<Camera> cameras = new List<Camera>();
+    private CameraJsInterop? cameraJsInterop;
+    private CameraEnhancer? cameraEnhancer;
+    private MrzRecognizer? recognizer;
+    private MrzJsInterop? mrzJsInterop;
+    private string selectedValue = string.Empty;
+    private bool _isCapturing = false;
+    private string buttonText = "Start";
+
+    public async Task Activate()
+    {
+        if (mrzJsInterop == null) return;
+        isLoading = true;
+        await mrzJsInterop.SetLicense(licenseKey);
+        await mrzJsInterop.LoadWasm();
+        // StateHasChanged();
+        recognizer = await mrzJsInterop.CreateMrzRecognizer();
+        isLoading = false;
+    }
+
+    private async Task OnChange(ChangeEventArgs e)
+    {
+        if (cameraEnhancer != null)
+        {
+            await cameraEnhancer.CloseCamera();
+
+            selectedValue = e.Value.ToString();
+
+            await OpenCamera();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        mrzJsInterop = new MrzJsInterop(JSRuntime);
+        await mrzJsInterop.LoadJS();
+
+        cameraJsInterop = new CameraJsInterop(JSRuntime);
+        await cameraJsInterop.LoadJS();
+
+        cameraEnhancer = await cameraJsInterop.CreateCameraEnhancer();
+        await cameraEnhancer.SetVideoElement("videoContainer");
+    }
+
+    public async Task GetCameras()
+    {
+        if (cameraEnhancer == null) return;
+        try
+        {
+            cameras = await cameraEnhancer.GetCameras();
+            if (cameras.Count >= 0)
+            {
+                selectedValue = cameras[0].DeviceId;
+                await OpenCamera();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    public async Task OpenCamera()
+    {
+        if (cameraEnhancer == null) return;
+        try
+        {
+            int selectedIndex = cameras.FindIndex(camera => camera.DeviceId == selectedValue);
+            await cameraEnhancer.SetResolution(640, 480);
+            await cameraEnhancer.OpenCamera(cameras[selectedIndex]);
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    public async Task Capture()
+    {
+        if (cameraEnhancer == null || recognizer == null) return;
+
+        if (!_isCapturing)
+        {
+            buttonText = "Stop";
+            _isCapturing = true;
+            _ = WorkLoop();
+        }
+        else
+        {
+            buttonText = "Start";
+            _isCapturing = false;
+        }
+    }
+
+    private async Task WorkLoop()
+    {
+        List<OcrResult> results = new List<OcrResult>();
+        if (recognizer == null || cameraEnhancer == null) return;
+
+        while (_isCapturing)
+        {
+            try
+            {
+                IJSObjectReference canvas = await cameraEnhancer.AcquireCameraFrame();
+                results = await recognizer.DecodeCanvas(canvas);
+                await cameraEnhancer.ClearOverlay();
+                string[] lines = new string[results.Count];
+                for (int i = 0; i < results.Count; i++)
+                {
+                    OcrResult result = results[i];
+                    int minX = result.Points[0];
+                    int minY = result.Points[1];
+
+                    await cameraEnhancer.DrawLine(result.Points[0], result.Points[1], result.Points[2], result.Points[3]);
+                    minX = minX < result.Points[2] ? minX : result.Points[2];
+                    minY = minY < result.Points[3] ? minY : result.Points[3];
+                    await cameraEnhancer.DrawLine(result.Points[2], result.Points[3], result.Points[4], result.Points[5]);
+                    minX = minX < result.Points[4] ? minX : result.Points[4];
+                    minY = minY < result.Points[5] ? minY : result.Points[5];
+                    await cameraEnhancer.DrawLine(result.Points[4], result.Points[5], result.Points[6], result.Points[7]);
+                    minX = minX < result.Points[6] ? minX : result.Points[6];
+                    minY = minY < result.Points[7] ? minY : result.Points[7];
+                    await cameraEnhancer.DrawLine(result.Points[6], result.Points[7], result.Points[0], result.Points[1]);
+
+                    await cameraEnhancer.DrawText(result.Text, minX, minY);
+                    lines[i] = result.Text;
+                }
+
+                if (lines.Length > 0)
+                {
+                    MrzResult mrzResult = MrzParser.Parse(lines);
+
+                    result = new MarkupString(mrzResult.ToString().Replace("\n", "<br>"));
+                    StateHasChanged();
+                }
+
+                
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        await cameraEnhancer.ClearOverlay();
+    }
+}
