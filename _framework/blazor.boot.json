@@ -7,7 +7,7 @@
   "linkerEnabled": true,
   "resources": {
     "assembly": {
-      "example.dll": "sha256-\/TXjPYg4Gw9AA+MuPc1wrxrqQgZkcmF2vjRvSmm486c=",
+      "example.dll": "sha256-3KrlHr0nufj7b8j+\/qsqW1Yr32C0MImpRSsipll7uFg=",
       "Microsoft.AspNetCore.Components.dll": "sha256-6gL5tVEQquOxLkD0vsKEEccitV70lM5aK5CvC21dYmw=",
       "Microsoft.AspNetCore.Components.Web.dll": "sha256-vFyhxmfvFAitJ4JiLPxjagOq6kefT7EtwXu\/rb60iy8=",
       "Microsoft.AspNetCore.Components.WebAssembly.dll": "sha256-XYM80863rCSqPKTIFsPNKnli9FGEN6ydRhJq9gbYJAE=",
@@ -23,7 +23,7 @@
       "Microsoft.JSInterop.dll": "sha256-HNgWYxTTfU7dGASyHHq\/QmETxRHHFlv3ZsNo+PhNnHU=",
       "Microsoft.JSInterop.WebAssembly.dll": "sha256-bzbqcJ6KmXNtttCdwlY3JqqzIuFo0rRDUc7qjI8CKYM=",
       "RazorCameraLibrary.dll": "sha256-Wn\/wGInVPxqY+irlNbqYFnp1aELIM1Ar6lXvTZd4xgE=",
-      "RazorMrzLibrary.dll": "sha256-ihB3LslLM8JSEbpO2HsKbmFwHDPukCLrQqjiL9BG6qE=",
+      "RazorMrzLibrary.dll": "sha256-MpYxp7hVKZkeIlxejbs+Ao99kjYuHRtMGh9ue7k37zk=",
       "System.Collections.Concurrent.dll": "sha256-iVVE9O+NcP6iYl4sd\/ZeC3urQoyLH9oTiV2umPpI0Ec=",
       "System.Collections.dll": "sha256-MhT1\/odzSutq6AYh7cLU975syM0Snr+wF9TMFLtM934=",
       "System.ComponentModel.dll": "sha256-pGP1Cnq1M\/2Hkyb2tJWqyVXzPDBaqoWBi3pBs4L1Cbg=",
@@ -34,7 +34,7 @@
       "System.Net.Primitives.dll": "sha256-nOoLJh4+suOf3q43JBSknW99ybub9wjOpNW1tKX4V2I=",
       "System.Private.CoreLib.dll": "sha256-Kv1nMLRK8MEDY3lsLNHhlHUR1ADgxhNPcdoqFi8Lfi4=",
       "System.Private.Uri.dll": "sha256-1QUjCXaVzO6oRMXibEcBVh19lkLzv8Le4bwFJu7Miz8=",
-      "System.Runtime.dll": "sha256-6r952Lrrc5oq4nYAISvVgFo67JH0AP0MUcpxE1nMj+U=",
+      "System.Runtime.dll": "sha256-nirxmVbHkKKlQjeWk05whhp2euH0HFOYA0MPVPxvQZg=",
       "System.Runtime.InteropServices.JavaScript.dll": "sha256-jF5031Knj+v9JHWfETs2gj\/VQZNxKMK9KbEghjV9+n4=",
       "System.Text.Encodings.Web.dll": "sha256-ChxM2laH4hgiZAQtC4snIt9lPmf8kF2gFJMqeGJ2E7Y=",
       "System.Text.Json.dll": "sha256-aAYU6SeLBsDdw8bwggh7eqowkrFdLPyLraJPxGrnl3U=",
