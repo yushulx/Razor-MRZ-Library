@@ -25,7 +25,6 @@ namespace RazorMrzLibrary
             if (result != null)
             {
                 JsonElement element = result.Value;
-                Console.WriteLine(element.ToString());
 
                 if (element.ValueKind == JsonValueKind.Array)
                 {
@@ -36,7 +35,7 @@ namespace RazorMrzLibrary
                             foreach (JsonElement line in lineResults.EnumerateArray())
                             {
                                 OcrResult mrzResult = new OcrResult();
-                                Console.WriteLine(line.ToString());
+            
                                 if (line.TryGetProperty("confidence", out JsonElement confidenceValue))
                                 {
                                     int value = confidenceValue.GetInt32();
