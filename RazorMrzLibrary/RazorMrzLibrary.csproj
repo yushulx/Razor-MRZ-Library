@@ -1,9 +1,26 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
+    <PackageId>RazorMrzLibrary</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>yushulx</Authors>
+    <Company>Dynamsoft</Company>
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Description>A Razor Class Library built using the Dynamsoft Label Recognizer SDK, which
+      provides APIs for scanning MRZ (Machine Readable Zone) on passports and IDs.</Description>
+    <PackageProjectUrl>https://github.com/yushulx/Razor-MRZ-Library</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/yushulx/Razor-MRZ-Library</RepositoryUrl>
+    <PackageTags>
+      MRZ;OCR;Passport</PackageTags>
+    <PackageReleaseNotes>
+      - Added MRZ recognition API.
+    </PackageReleaseNotes>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
 
@@ -15,4 +32,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.11" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
 </Project>
