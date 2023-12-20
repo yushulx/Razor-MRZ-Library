@@ -83,6 +83,6 @@ Represents the result of parsing MRZ text.
 
 ## Build
 ```bash
-cd RazorCameraLibrary
+cd RazorMrzLibrary
 dotnet build --configuration Release
 ```
