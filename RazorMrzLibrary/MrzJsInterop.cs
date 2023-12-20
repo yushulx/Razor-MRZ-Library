@@ -2,22 +2,28 @@ using Microsoft.JSInterop;
 
 namespace RazorMrzLibrary
 {
+    /// <summary>
+    /// Provides JavaScript interop functionalities for MRZ recognition.
+    /// </summary>
     public class MrzJsInterop : IAsyncDisposable
     {
+        // Holds a task that resolves to a JavaScript module reference.
         private readonly Lazy<Task<IJSObjectReference>> moduleTask;
 
+        /// <summary>
+        /// Initializes a new instance of the MrzJsInterop class.
+        /// </summary>
+        /// <param name="jsRuntime">The JS runtime to use for invoking JavaScript functions.</param>
         public MrzJsInterop(IJSRuntime jsRuntime)
         {
             moduleTask = new(() => jsRuntime.InvokeAsync<IJSObjectReference>(
                 "import", "./_content/RazorMrzLibrary/mrzJsInterop.js").AsTask());
         }
 
-        public async ValueTask<string> Prompt(string message)
-        {
-            var module = await moduleTask.Value;
-            return await module.InvokeAsync<string>("showPrompt", message);
-        }
 
+        /// <summary>
+        /// Releases unmanaged resources asynchronously.
+        /// </summary>
         public async ValueTask DisposeAsync()
         {
             if (moduleTask.IsValueCreated)
@@ -46,6 +52,10 @@ namespace RazorMrzLibrary
             await module.InvokeVoidAsync("setLicense", license);
         }
 
+        /// <summary>
+        /// Creates a new MrzRecognizer instance.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation. The task result is a new MrzRecognizer instance.</returns>
         public async Task<MrzRecognizer> CreateMrzRecognizer()
         {
             var module = await moduleTask.Value;
@@ -53,6 +63,10 @@ namespace RazorMrzLibrary
             MrzRecognizer recognizer = new MrzRecognizer(module, jsObjectReference);
             return recognizer;
         }
+
+        /// <summary>
+        /// Loads the WebAssembly for MRZ recognition.
+        /// </summary>
         public async Task LoadWasm()
         {
             var module = await moduleTask.Value;

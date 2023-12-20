@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace RazorMrzLibrary
 {
+    /// <summary> 
+    /// Represents a line of text recognized by the OCR engine.
+    /// </summary>
     public class OcrResult
     {
         public int Confidence { get; set; }
@@ -35,7 +38,7 @@ namespace RazorMrzLibrary
                             foreach (JsonElement line in lineResults.EnumerateArray())
                             {
                                 OcrResult mrzResult = new OcrResult();
-            
+
                                 if (line.TryGetProperty("confidence", out JsonElement confidenceValue))
                                 {
                                     int value = confidenceValue.GetInt32();

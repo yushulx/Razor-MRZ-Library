@@ -2,6 +2,9 @@
 
 namespace RazorMrzLibrary
 {
+    /// <summary>
+    /// Represents the MRZ information.
+    /// </summary>
     public class MrzResult
     {
         // Properties

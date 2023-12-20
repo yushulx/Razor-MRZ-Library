@@ -2,6 +2,9 @@
 
 namespace RazorMrzLibrary
 {
+    /// <summary>
+    /// Parses MRZ lines and extracts the information.
+    /// </summary>
     public class MrzParser
     {
         private static readonly Regex TypeRegex = new Regex(@"[I|P|V]");
@@ -58,6 +61,11 @@ namespace RazorMrzLibrary
             }
         }
 
+        /// <summary>
+        /// Parses the MRZ lines and extracts the information.
+        /// </summary>
+        /// <param name="lines">The MRZ lines.</param>
+        /// <returns>A MrzResult object containing the extracted information.</returns>
         public static MrzResult Parse(string[] lines)
         {
             if (lines.Length == 2) return ParseTwoLines(lines[0], lines[1]);
