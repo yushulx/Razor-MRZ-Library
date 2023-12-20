@@ -175,8 +175,16 @@
                 if (lines.Length > 0)
                 {
                     MrzResult mrzResult = MrzParser.Parse(lines);
-
-                    result = new MarkupString(mrzResult.ToString().Replace("\n", "<br>"));
+                    string text = $"Type: {mrzResult.Type}<br>" +
+                   $"Nationality: {mrzResult.Nationality}<br>" +
+                   $"Surname: {mrzResult.Surname}<br>" +
+                   $"Given name: {mrzResult.GivenName}<br>" +
+                   $"Passport Number: {mrzResult.PassportNumber}<br>" +
+                   $"Issue Country: {mrzResult.IssuingCountry}<br>" +
+                   $"Date of birth: {mrzResult.BirthDate}<br>" +
+                   $"Gender: {mrzResult.Gender}<br>" +
+                   $"Expiration: {mrzResult.Expiration}<br>";
+                    result = new MarkupString(text);
                     StateHasChanged();
                 }
 
